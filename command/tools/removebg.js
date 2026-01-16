@@ -1,106 +1,103 @@
 const fetch = require("node-fetch");
-const { Markup } = require("telegraf");
 const { loadUser, saveUser } = require("../../handler");
 
 module.exports = async (ctx) => {
+  const isIndo = (ctx.from?.language_code || "").startsWith("id");
+  const replyId = ctx.message?.message_id;
+
+  // opsi reply aman
+  const replyOpts = {
+    reply_to_message_id: replyId,
+    allow_sending_without_reply: true
+  };
+
   try {
-    // cek limit
+    const user = loadUser(ctx.from.id, ctx.from.first_name);
+
     if (user.limit <= 0) {
       return ctx.reply(
         isIndo
-          ? "🚫 Limit kamu sudah habis. Tunggu 24 jam untuk reset."
-          : "🚫 Your limit has run out. Wait 24 hours for reset.",
-        { reply_to_message_id: ctx.message?.message_id }
+          ? "🚫 Limit kamu sudah habis. Tunggu 24 jam."
+          : "🚫 Your limit has run out. Please wait 24 hours.",
+        replyOpts
       );
     }
-    const isIndo = (ctx.from?.language_code || "").startsWith("id");
 
     let fileId;
-    let userCaption = "";
 
-    const messageText = ctx.message.text || "";
-
+    // ===============================
+    // AMBIL GAMBAR DARI REPLY
+    // ===============================
     if (ctx.message.reply_to_message) {
-      const reply = ctx.message.reply_to_message;
-      userCaption = messageText.replace(/^\/removebg\s*/i, "").trim();
-
-      if (reply.photo) {
-        const photo = reply.photo[reply.photo.length - 1];
-        fileId = photo.file_id;
-      } else if (reply.document) {
-        fileId = reply.document.file_id;
-      } else {
-        return ctx.reply(
-          isIndo
-            ? "⚠️ Balasan tidak berisi foto atau dokumen."
-            : "⚠️ The reply does not contain a photo or document.",
-          { reply_to_message_id: ctx.message?.message_id }
-        );
-      }
-    } else {
-      userCaption = messageText.replace(/^\/removebg\s*/i, "").trim();
-
-      if (ctx.message.photo) {
-        const photo = ctx.message.photo[ctx.message.photo.length - 1];
-        fileId = photo.file_id;
-      } else if (ctx.message.document) {
-        fileId = ctx.message.document.file_id;
-      } else {
-        return ctx.reply(
-          isIndo
-            ? "⚠️ Kirim foto atau reply /removebg pada foto."
-            : "⚠️ Send a photo or reply /removebg to a photo.",
-          { reply_to_message_id: ctx.message?.message_id }
-        );
-      }
+      const r = ctx.message.reply_to_message;
+      if (r.photo) fileId = r.photo.at(-1).file_id;
+      if (r.document?.mime_type?.startsWith("image/"))
+        fileId = r.document.file_id;
     }
 
-    await ctx.reply(
-      isIndo
-        ? "⏳ Menghapus background, mohon tunggu..."
-        : "⏳ Removing background, please wait...",
-      { reply_to_message_id: ctx.message?.message_id }
-    );
+    // ===============================
+    // AMBIL GAMBAR LANGSUNG
+    // ===============================
+    if (!fileId) {
+      if (ctx.message.photo) fileId = ctx.message.photo.at(-1).file_id;
+      if (ctx.message.document?.mime_type?.startsWith("image/"))
+        fileId = ctx.message.document.file_id;
+    }
 
-    // kurangi limit
-    user.limit -= 1;
-    saveUser(ctx.from.id, user);
-    
+    if (!fileId) {
+      return ctx.reply(
+        isIndo
+          ? "⚠️ Kirim gambar atau reply gambar dengan /removebg"
+          : "⚠️ Send or reply an image with /removebg",
+        replyOpts
+      );
+    }
+
+    // ===============================
+    // PROSES
+    // ===============================
+    await ctx.reply("⏳ Processing...", replyOpts);
+
     const fileLink = await ctx.telegram.getFileLink(fileId);
 
-    // API remove bg
-    const apiUrl = `https://api.nekolabs.web.id/tools/pxpic/removebg?imageUrl=${encodeURIComponent(fileLink.href)}`;
+    const apiUrl =
+      `https://api.deline.web.id/tools/removebg?url=${encodeURIComponent(fileLink.href)}`;
+
     const res = await fetch(apiUrl);
     const json = await res.json();
 
-    if (!json.success || !json.result) {
-      throw new Error(isIndo ? "Gagal menghapus background." : "Failed to remove background.");
+    if (!json.status || !json.result?.cutoutUrl) {
+      throw new Error("RemoveBG API failed");
     }
 
-    // Caption dengan penyesuaian bahasa
-    let caption = isIndo ? "✅ Background berhasil dihapus!" : "✅ Background successfully removed!";
-    if (userCaption) caption += isIndo ? "\n📝 Caption: " + userCaption : "\n📝 Caption: " + userCaption;
-    caption += isIndo
-      ? "\n🌐 Hasil dengan latar belakang terhapus dapat diunduh melalui tombol di bawah:"
-      : "\n🌐 The result with the background removed can be downloaded via the button below:";
+    // ===============================
+    // KURANGI LIMIT (SETELAH SUKSES)
+    // ===============================
+    user.limit -= 1;
+    saveUser(ctx.from.id, user);
 
-    const buttons = Markup.inlineKeyboard([
-      Markup.button.url(isIndo ? "📥 Unduh" : "📥 Download", json.result)
-    ]);
-
-    // Kirim foto hasil remove bg dengan tombol
-    await ctx.replyWithPhoto(
-      { url: json.result },
-      { caption, reply_markup: buttons.reply_markup, reply_to_message_id: ctx.message?.message_id }
+    // ===============================
+    // KIRIM HASIL (LINK SAJA)
+    // ===============================
+    await ctx.reply(
+      isIndo
+        ? `✅ Background berhasil dihapus!\n\n<b>🔗 Hasil PNG:</b>\n<a href="${json.result.cutoutUrl}">Klik untuk mengunduh</a>`
+        : `✅ Background successfully removed!\n\n<b>🔗 PNG Result:</b>\n<a href="${json.result.cutoutUrl}">Click to download</a>`,
+      {
+        ...replyOpts,
+        parse_mode: "HTML",
+        disable_web_page_preview: true
+      }
     );
+
 
   } catch (err) {
     console.error("❌ Error di /removebg:", err);
     ctx.reply(
       isIndo
-        ? "❌ Gagal menghapus background, coba lagi."
-        : "❌ Failed to remove background, please try again.",
-      { reply_to_message_id: ctx.message?.message_id }
+        ? "❌ Gagal menghapus background."
+        : "❌ Failed to remove background.",
+      replyOpts
     );
   }
 };

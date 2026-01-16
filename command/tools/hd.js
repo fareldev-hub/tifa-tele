@@ -4,10 +4,8 @@ const { loadUser, saveUser } = require("../../handler");
 module.exports = async (ctx) => {
   try {
     const user = loadUser(ctx.from.id, ctx.from.first_name);
-
     const isIndo = (ctx.from?.language_code || "").startsWith("id");
 
-    // cek limit
     if (user.limit <= 0) {
       return ctx.reply(
         isIndo
@@ -16,82 +14,75 @@ module.exports = async (ctx) => {
         { reply_to_message_id: ctx.message?.message_id }
       );
     }
-    
-    const args = ctx.message.text.split(" ").slice(1);
-    let scale = parseInt(args[0]);
-    if (!scale || scale < 2 || scale > 8) scale = 2; // default 2x
 
-    // Ambil file dari reply atau langsung
     let fileId;
+
+    // Reply image
     if (ctx.message.reply_to_message) {
-      const reply = ctx.message.reply_to_message;
-      if (reply.photo) {
-        fileId = reply.photo[reply.photo.length - 1].file_id;
-      } else if (reply.document && reply.document.mime_type.startsWith("image/")) {
-        fileId = reply.document.file_id;
-      } else {
-        return ctx.reply(isIndo
-          ? "⚠️ Balasan harus berupa gambar."
-          : "⚠️ The reply must be an image.",
-          { reply_to_message_id: ctx.message?.message_id }
-        );
+      const r = ctx.message.reply_to_message;
+      if (r.photo) fileId = r.photo[r.photo.length - 1].file_id;
+      else if (r.document?.mime_type?.startsWith("image/"))
+        fileId = r.document.file_id;
+    }
+
+    // Image + caption /hd
+    if (!fileId) {
+      const caption = ctx.message.caption || ctx.message.text || "";
+      if (caption.trim().startsWith("/hd")) {
+        if (ctx.message.photo)
+          fileId = ctx.message.photo[ctx.message.photo.length - 1].file_id;
+        else if (ctx.message.document?.mime_type?.startsWith("image/"))
+          fileId = ctx.message.document.file_id;
       }
-    } else {
-      return ctx.reply(isIndo
-        ? "⚠️ Balas gambar dengan /hd <scale> atau sertakan gambar."
-        : "⚠️ Reply to an image with /hd <scale> or send an image with the command.",
+    }
+
+    if (!fileId) {
+      return ctx.reply(
+        isIndo
+          ? "⚠️ Kirim gambar dengan caption /hd atau reply gambar dengan /hd"
+          : "⚠️ Send an image with /hd caption or reply to an image with /hd",
         { reply_to_message_id: ctx.message?.message_id }
       );
     }
 
-    await ctx.reply(isIndo
-      ? `⏳ Memproses gambar dengan scale ${scale}x...`
-      : `⏳ Processing image with scale ${scale}x...`,
+    await ctx.reply(
+      isIndo ? "⏳ Memproses gambar..." : "⏳ Processing image...",
       { reply_to_message_id: ctx.message?.message_id }
     );
-  
 
-    // Ambil link file dari Telegram
+    // Telegram file link
     const fileLink = await ctx.telegram.getFileLink(fileId);
-
-    // Encode URL
     const encodedUrl = encodeURIComponent(fileLink.href);
 
-    // Panggil API HD
-    const apiUrl = `https://api.yupra.my.id/api/tools/hd?url=${encodedUrl}&scale=${scale}`;
+    // Fetch HD image (BINARY)
+    const apiUrl = `https://api.deline.web.id/tools/hd?url=${encodedUrl}`;
     const res = await fetch(apiUrl);
-    const data = await res.json();
 
-    if (data.status !== 200 || !data.result) {
-      return ctx.reply(isIndo
-        ? "❌ Gagal memproses gambar. Coba lagi."
-        : "❌ Failed to process image. Please try again.",
-        { reply_to_message_id: ctx.message?.message_id }
-      );
+    if (!res.ok) {
+      throw new Error("Failed to fetch HD image");
     }
 
-    const result = data.result;
-    const caption = isIndo
-      ? `✨ Gambar berhasil di-enhance ${result.scale}!\n\n📝 Info: ${result.info}\n💡 Catatan: ${result.note}`
-      : `✨ Image successfully enhanced ${result.scale}!\n\n📝 Info: ${result.info}\n💡 Note: ${result.note}`;
+    const buffer = Buffer.from(await res.arrayBuffer());
 
     await ctx.replyWithPhoto(
-      { url: result.imageUrl },
+      { source: buffer },
       {
-        caption,
-        parse_mode: "Markdown",
+        caption: isIndo
+          ? "✨ Gambar berhasil di-enhance!"
+          : "✨ Image enhanced successfully!",
         reply_to_message_id: ctx.message?.message_id
       }
     );
+
     user.limit -= 5;
     saveUser(ctx.from.id, user);
 
   } catch (err) {
-    console.error("❌ Error di /hd:", err);
+    console.error("❌ Error /hd:", err);
     ctx.reply(
       (ctx.from?.language_code || "").startsWith("id")
-        ? "❌ Terjadi kesalahan saat memproses /hd."
-        : "❌ An error occurred while processing /hd.",
+        ? "❌ Terjadi kesalahan saat memproses gambar."
+        : "❌ An error occurred while processing the image.",
       { reply_to_message_id: ctx.message?.message_id }
     );
   }

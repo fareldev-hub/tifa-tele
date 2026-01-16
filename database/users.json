@@ -2,7 +2,7 @@
   "1087968824": {
     "id": 1087968824,
     "name": "Group",
-    "exp": 17,
+    "exp": 140,
     "level": 1,
     "limit": 20,
     "uang": 1000,
@@ -13,14 +13,14 @@
   "8485352162": {
     "id": 8485352162,
     "name": "Farel",
-    "exp": 372,
-    "level": 3,
-    "limit": 65,
-    "uang": 56200,
+    "exp": 162,
+    "level": 4,
+    "limit": 48,
+    "uang": 56300,
     "rank": "Bronze",
     "isBanned": false,
     "isPremium": true,
-    "username": "VionixDev"
+    "username": "vionixdev"
   },
   "7443900963": {
     "id": 7443900963,
@@ -36,7 +36,7 @@
   "8007355769": {
     "id": 8007355769,
     "name": "Ryukaa",
-    "exp": 7,
+    "exp": 60,
     "level": 1,
     "limit": 20,
     "uang": 1000,
@@ -47,7 +47,7 @@
   "8228401891": {
     "id": 8228401891,
     "name": "Celz",
-    "exp": 26,
+    "exp": 290,
     "level": 1,
     "limit": 20,
     "uang": 1000,
@@ -69,7 +69,7 @@
   "8511398959": {
     "id": 8511398959,
     "name": "⏤͟͟͞͞Danzx || Is Here",
-    "exp": 20,
+    "exp": 141,
     "level": 1,
     "limit": 20,
     "uang": 1000,
@@ -80,7 +80,7 @@
   "8266106726": {
     "id": 8266106726,
     "name": "SATRIA",
-    "exp": 12,
+    "exp": 249,
     "level": 1,
     "limit": 20,
     "uang": 1000,
@@ -92,6 +92,116 @@
     "id": 8118340859,
     "name": "pablow",
     "exp": 5,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbine",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8345146544": {
+    "id": 8345146544,
+    "name": "ambaju",
+    "exp": 100,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbine",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8153296742": {
+    "id": 8153296742,
+    "name": "SV Nirwana cowok tuli",
+    "exp": 9,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbine",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "7981065761": {
+    "id": 7981065761,
+    "name": "𝐑𝐄𝐍𝐓𝐀𝐋 𝐀𝐊𝐔𝐍 𝐘𝐀𝐍𝐍",
+    "exp": 10,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbine",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "7893036776": {
+    "id": 7893036776,
+    "name": "dihar x b1ng",
+    "exp": 0,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Bronze",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "7513958555": {
+    "id": 7513958555,
+    "name": "𝗔𝗱𝗺𝗶𝗻 𝐓𝐢𝐦𝐨𝐭𝐡𝐞́𝐞 🪽 [ Jarang ON ]",
+    "exp": 0,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Bronze",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "7152412751": {
+    "id": 7152412751,
+    "name": "⏤‌‌‌‌Xv7 || VINZAA_",
+    "exp": 10,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbine",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "7197043124": {
+    "id": 7197043124,
+    "name": "⏤͟͟͞𝗭𝟒 || 𝐚𝐜𝐚 𝐰𝐨𝐤",
+    "exp": 0,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Bronze",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "6587358412": {
+    "id": 6587358412,
+    "name": "⏤͟͟͞͞Xv7 || járzy‹",
+    "exp": 0,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Bronze",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "7761852615": {
+    "id": 7761852615,
+    "name": "raddds",
+    "exp": 20,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbine",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "7990885409": {
+    "id": 7990885409,
+    "name": "Ajiiiiiiiiiimutttt",
+    "exp": 15,
     "level": 1,
     "limit": 20,
     "uang": 1000,

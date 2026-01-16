@@ -1,7 +1,7 @@
 const axios = require("axios");
 const fs = require("fs");
 const { loadUser, saveUser } = require("../../handler");
-const { makePlayCard } = require("../../canvas/playCard");
+const { makePlayCard } = require("../../playCard");
 
 module.exports = async (ctx) => {
   let imgPath;

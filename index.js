@@ -140,7 +140,7 @@ bot.start(async (ctx) => {
       {
         caption: msg,
         parse_mode: "Markdown",
-      //  reply_markup: inlineKeyboard,
+        //  reply_markup: inlineKeyboard,
         reply_to_message_id: ctx.message?.message_id,
       }
     );
@@ -172,129 +172,67 @@ function escapeMarkdownV2(text) {
   return text.replace(/([_*\[\]()~`>#+\-=|{}.!])/g, "\\$1");
 }
 
-/* === AI Otomatis (stabil /ai / message reply) === */
-bot.on("message", async (ctx, next) => {
-  try {
-    const message = ctx.message.text?.trim();
-    const hasPhoto = !!ctx.message.photo;
 
-    if (!message && !hasPhoto) return next();
-    if (message && message.startsWith("/")) return next();
+bot.on("text", async (ctx) => {
+  const reply = ctx.message.reply_to_message;
+  if (!reply || !reply.from?.is_bot) return;
 
-    if (
-      ["group", "supergroup"].includes(ctx.chat.type) &&
-      !(message?.includes(`@${ctx.me.username}`) ||
-        ctx.message.reply_to_message?.from?.id === ctx.botInfo.id)
-    )
-      return next();
+  const session = global.gameSession.get(reply.message_id);
+  if (!session) return;
 
-    if (hasPhoto && !ctx.message.reply_to_message) return next();
+  // hanya user pemilik soal
+  if (session.userId !== ctx.from.id) return;
 
-    let targetPhotoMessage = null;
-    if (
-      ctx.message.reply_to_message &&
-      ctx.message.reply_to_message.photo &&
-      ctx.message.reply_to_message.photo.length > 0
-    )
-      targetPhotoMessage = ctx.message.reply_to_message;
+  const answer = ctx.message.text.trim().toLowerCase();
 
-    const isIndo = (ctx.from?.language_code || "").startsWith("id");
-    const user = loadUser(ctx.from.id, ctx.from.first_name);
+  // ===============================
+  // JAWABAN BENAR
+  // ===============================
+  if (answer === session.answer) {
+    global.gameSession.delete(reply.message_id);
 
-    if (user.limit <= 0)
+    // asahotak → EXP
+    if (session.type === "asahotak") {
+      const user = loadUser(ctx.from.id, ctx.from.first_name);
+      user.exp = (user.exp || 0) + 50;
+      saveUser(ctx.from.id, user);
+
       return ctx.reply(
-        isIndo
-          ? "🚫 Limit kamu sudah habis. Tunggu 24 jam untuk reset."
-          : "🚫 Your daily limit has run out. Please wait 24 hours for reset.",
-        { reply_to_message_id: ctx.message?.message_id }
+        "✅ <b>Jawaban BENAR!</b>\n🎉 EXP +50",
+        { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" }
       );
-
-    user.limit -= 1;
-    saveUser(ctx.from.id, user);
-
-    /* =====================
-       THINKING
-    ===================== */
-    const thinkingMsg = await ctx.reply(
-      isIndo ? "💭 Sedang berpikir..." : "💭 Thinking...",
-      { reply_to_message_id: ctx.message?.message_id }
-    );
-
-    const loadingStates = ["", ".", "..", "..."];
-    let i = 0;
-    const interval = setInterval(() => {
-      ctx.telegram
-        .editMessageText(
-          ctx.chat.id,
-          thinkingMsg.message_id,
-          undefined,
-          `${isIndo ? "💭 Sedang berpikir" : "💭 Thinking"}${loadingStates[i++ % loadingStates.length]}`
-        )
-        .catch(() => {});
-    }, 900);
-
-    /* =====================
-       PREPARE PROMPT
-    ===================== */
-    let promptText = "";
-
-    if (targetPhotoMessage) {
-      promptText =
-        message || "Jelaskan gambar ini secara detail dengan gaya lucu.";
-    } else {
-      promptText = message;
     }
 
-    /* =====================
-       CALL ENDPOINT TIFA
-    ===================== */
-    const url = `https://endpoint-hub.up.railway.app/api/chatai/tifa?text=${encodeURIComponent(
-      promptText
-    )}`;
+    // caklontong → deskripsi lucu
+    if (session.type === "caklontong") {
+      return ctx.reply(
+        `✅ <b>BENAR!</b>\n🤣 ${session.desc}`,
+        { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" }
+      );
+    }
+  }
 
-    const res = await fetch(url);
-    const json = await res.json();
+  // ===============================
+  // JAWABAN SALAH
+  // ===============================
+  session.wrong += 1;
 
-    clearInterval(interval);
+  if (session.wrong >= 3) {
+    global.gameSession.delete(reply.message_id);
 
-    const aiText =
-      json?.response ||
-      (isIndo ? "Aku bingung jawabnya 😅" : "I'm not sure 😅");
-
-    /* =====================
-       SEND RESULT
-    ===================== */
-    await ctx.telegram.editMessageText(
-      ctx.chat.id,
-      thinkingMsg.message_id,
-      undefined,
-      aiText,
-      {
-        parse_mode: "Markdown",
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: isIndo ? "Bagikan" : "Share",
-                switch_inline_query: message || "",
-              },
-            ],
-          ],
-        },
-      }
-    );
-  } catch (err) {
-    console.error("❌ Error AI otomatis:", err);
-    ctx.reply(
-      (ctx.from?.language_code || "").startsWith("id")
-        ? "⚠️ Terjadi kesalahan saat AI merespons 😥"
-        : "⚠️ Error occurred while AI was responding 😥",
-      { reply_to_message_id: ctx.message?.message_id }
+    return ctx.reply(
+      `❌ <b>Salah 3x!</b>\n\n<b>Jawaban:</b> ${session.answer}${
+        session.desc ? `\n🤣 ${session.desc}` : ""
+      }`,
+      { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" }
     );
   }
-  return next();
-});
 
+  return ctx.reply(
+    `❌ Salah!\n📌 Kesempatan tersisa: ${3 - session.wrong}x`,
+    { reply_to_message_id: ctx.message.message_id }
+  );
+});
 
 /* === Payment Handler === */
 bot.on("successful_payment", async (ctx) => {

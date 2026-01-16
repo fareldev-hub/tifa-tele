@@ -1,8 +1,19 @@
 {
+  "1087968824": {
+    "id": 1087968824,
+    "name": "Group",
+    "exp": 17,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbine",
+    "isBanned": false,
+    "isPremium": false
+  },
   "8485352162": {
     "id": 8485352162,
     "name": "Farel",
-    "exp": 365,
+    "exp": 372,
     "level": 3,
     "limit": 65,
     "uang": 56200,
@@ -19,6 +30,72 @@
     "limit": 18,
     "uang": 1000,
     "rank": "Bronze",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8007355769": {
+    "id": 8007355769,
+    "name": "Ryukaa",
+    "exp": 7,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbine",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8228401891": {
+    "id": 8228401891,
+    "name": "Celz",
+    "exp": 26,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbine",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "6010831493": {
+    "id": 6010831493,
+    "name": "AzzStecu",
+    "exp": 12,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbine",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8511398959": {
+    "id": 8511398959,
+    "name": "⏤͟͟͞͞Danzx || Is Here",
+    "exp": 20,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbine",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8266106726": {
+    "id": 8266106726,
+    "name": "SATRIA",
+    "exp": 12,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbine",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8118340859": {
+    "id": 8118340859,
+    "name": "pablow",
+    "exp": 5,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbine",
     "isBanned": false,
     "isPremium": false
   }

@@ -1,0 +1,25 @@
+{
+  "8485352162": {
+    "id": 8485352162,
+    "name": "Farel",
+    "exp": 365,
+    "level": 3,
+    "limit": 65,
+    "uang": 56200,
+    "rank": "Bronze",
+    "isBanned": false,
+    "isPremium": true,
+    "username": "VionixDev"
+  },
+  "7443900963": {
+    "id": 7443900963,
+    "name": "Jonathan",
+    "exp": 0,
+    "level": 1,
+    "limit": 18,
+    "uang": 1000,
+    "rank": "Bronze",
+    "isBanned": false,
+    "isPremium": false
+  }
+}

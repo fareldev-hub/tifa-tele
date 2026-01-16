@@ -1,0 +1,48 @@
+{
+  "name": "vionix-bot",
+  "version": "1.0.0",
+  "description": "Bot Telegram berbasis Node.js dengan fitur limit harian, database user, dan sistem command modular.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "telegram-bot",
+    "nodejs",
+    "telegraf",
+    "vionix",
+    "bot"
+  ],
+  "author": "Farel Developer",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "@distube/ytdl-core": "^4.16.12",
+    "@elevenlabs/elevenlabs-js": "^2.22.0",
+    "@google/genai": "^1.29.0",
+    "@napi-rs/canvas": "^0.1.51",
+    "axios": "^1.13.1",
+    "dotenv": "^16.3.1",
+    "express": "^5.1.0",
+    "figlet": "^1.5.2",
+    "fluent-ffmpeg": "^2.1.3",
+    "fs": "^0.0.1-security",
+    "imgbb": "^1.0.48",
+    "jimp": "^1.6.0",
+    "node-cron": "^4.2.1",
+    "path": "^0.12.7",
+    "request": "^2.88.2",
+    "requests": "^0.3.0",
+    "sharp": "^0.34.5",
+    "systeminformation": "^5.27.11",
+    "telegraf": "^4.16.3",
+    "terminal-image": "^1.1.0",
+    "webp-converter": "^2.3.3",
+    "youtubei.js": "^16.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}

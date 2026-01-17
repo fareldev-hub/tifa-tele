@@ -1,56 +1,78 @@
+const { loadUser, saveUser } = require("../../handler");
+
 module.exports = async (ctx) => {
   try {
-    const chatId = ctx.chat.id;
-
-    // Hanya grup
+    // Pastikan command hanya di grup
     if (!ctx.chat || ctx.chat.type === "private") {
-      return ctx.reply("❌ Perintah /tagall hanya bisa digunakan di grup!");
+      return ctx.reply("❌ Perintah /cekkhodam hanya bisa digunakan di grup!");
     }
 
-    // Ambil pesan custom
-    const args = ctx.message.text.split(" ").slice(1);
-    let customMsg = args.join(" ").trim();
+    let targetUser;
 
-    // Jika tidak ada pesan custom, kasih default text agar Telegram tidak error
-    if (!customMsg) customMsg = "👥 Tag semua anggota: Haloooo Semuanyaa";
+    // Jika reply pesan
+    if (ctx.message.reply_to_message) {
+      targetUser = ctx.message.reply_to_message.from;
+    } else {
+      // Jika tag @username
+      const args = ctx.message.text.split(" ").slice(1);
+      if (!args.length) {
+        return ctx.reply(
+          "💡 Gunakan format:\n/cekkhodam @username atau reply pesan user",
+          { reply_to_message_id: ctx.message?.message_id }
+        );
+      }
 
-    // pastikan global.groupMembers ada
-    global.groupMembers = global.groupMembers || {};
-    global.groupMembers[chatId] = global.groupMembers[chatId] || [];
-
-    // Ambil semua admin
-    const admins = await ctx.getChatAdministrators();
-    const adminMentions = admins.map((a) => a.user.id);
-
-    // Gabungkan admin + member unik
-    const memberIds = [
-      ...new Set([
-        ...adminMentions,
-        ...global.groupMembers[chatId].map((u) => u.id),
-      ]),
-    ];
-
-    if (memberIds.length === 0) {
-      return ctx.reply("❌ Tidak ada anggota yang bisa ditag.");
+      const username = args[0].replace("@", "");
+      // Ambil semua admin
+      const admins = await ctx.getChatAdministrators();
+      const member = admins.find(m => m.user.username === username);
+      if (member) targetUser = member.user;
     }
 
-    // Kirim per chunk (batasi 50 mention per pesan)
-    const chunkSize = 50;
-    for (let i = 0; i < memberIds.length; i += chunkSize) {
-      const chunkMentions = memberIds
-        .slice(i, i + chunkSize)
-        .map((id) => `<a href="tg://user?id=${id}">⠀</a>`)
-        .join(" ");
-
-      const msg = `${customMsg}\n${chunkMentions}`; // pastikan ada teks sebelum mention
-
-      await ctx.reply(msg, {
-        parse_mode: "HTML",
-        disable_web_page_preview: true,
+    if (!targetUser) {
+      return ctx.reply("❌ User tidak ditemukan. Reply pesan atau tag dengan benar.", {
+        reply_to_message_id: ctx.message?.message_id,
       });
     }
+
+    // Ambil data user dari DB
+    const userData = loadUser(targetUser.id, targetUser.first_name);
+
+    // Daftar khodam acak lucu, lawak, keren
+    const khodamList = [
+      { name: "Maling Pangsit", power: Math.floor(Math.random() * 10) + 1 },
+      { name: "Naga", power: Math.floor(Math.random() * 20) + 5 },
+      { name: "Mak Lampir", power: Math.floor(Math.random() * 15) + 1 },
+      { name: "Kadal", power: Math.floor(Math.random() * 25) + 10 },
+      { name: "Buaya Darat", power: Math.floor(Math.random() * 30) + 20 },
+      { name: "Si Keripik Pedas", power: Math.floor(Math.random() * 20) + 5 },
+      { name: "Buaya sunda", power: Math.floor(Math.random() * 15) + 1 },
+      { name: "Superhero Tidur", power: Math.floor(Math.random() * 40) + 25 },
+      { name: "Monyet Hacker", power: Math.floor(Math.random() * 20) + 10 },
+      { name: "Raja Sate", power: Math.floor(Math.random() * 10) + 1 }
+    ];
+
+    // Jika belum ada khodam → kasih random
+    if (!userData.khodam || !userData.khodam.name || userData.khodam.name === "Belum punya khodam") {
+      const randomKhodam = khodamList[Math.floor(Math.random() * khodamList.length)];
+      userData.khodam = randomKhodam;
+      saveUser(targetUser.id, userData);
+    }
+
+    const khodam = userData.khodam;
+
+    // Kirim balasan
+    await ctx.reply(
+      `👤 Khodam milik *${targetUser.first_name}*:\n\n` +
+      `🪄 Nama: ${khodam.name}\n` +
+      `⚡ Power: ${khodam.power}`,
+      { parse_mode: "Markdown", reply_to_message_id: ctx.message?.message_id }
+    );
+
   } catch (err) {
-    console.error("❌ Error di /tagall:", err);
-    ctx.reply("❌ Terjadi kesalahan saat menjalankan /tagall.");
+    console.error("❌ Error di /cekkhodam:", err);
+    ctx.reply("❌ Terjadi kesalahan saat mengecek khodam 😥", {
+      reply_to_message_id: ctx.message?.message_id,
+    });
   }
 };

@@ -44,7 +44,9 @@ module.exports = async (ctx) => {
 
     // === Pesan loading ===
     const waitMsg = await ctx.reply(
-      isIndo ? "⏳ Menganalisis gambar dan membuat prompt..." : "⏳ Analyzing image and generating prompt...",
+      isIndo
+        ? "⏳ Menganalisis gambar dan membuat prompt..."
+        : "⏳ Analyzing image and generating prompt...",
       { reply_to_message_id: ctx.message?.message_id }
     );
 
@@ -52,28 +54,18 @@ module.exports = async (ctx) => {
     const fileLink = await ctx.telegram.getFileLink(fileId);
     const encodedUrl = encodeURIComponent(fileLink.href);
 
-    // === Panggil API toprompt ===
-    const apiUrl = `https://api.nekolabs.web.id/tools/convert/toprompt?imageUrl=${encodedUrl}`;
+    // === Panggil API Deline Toprompt ===
+    const apiUrl = `https://api.deline.web.id/ai/toprompt?url=${encodedUrl}`;
     const res = await fetch(apiUrl);
     const data = await res.json();
 
-    console.log("🔍 API Response:", data);
-
-    // === Tangani format respons fleksibel ===
-    let promptText =
-      data?.result?.prompt ||
-      data?.result?.text ||
-      data?.result ||
-      data?.prompt ||
-      data?.text ||
-      null;
-
-    // Jika hasil masih null, cek apakah API mengembalikan string langsung
-    if (!promptText && typeof data === "string") {
-      promptText = data;
+    if (!data || !data.status || !data.result) {
+      throw new Error("API tidak mengembalikan hasil valid");
     }
 
-    // Jika tetap kosong → error
+    // Ambil hasil terjemahan
+    const promptText = data.result.translated || data.result.original;
+
     if (!promptText || promptText.length < 3) {
       throw new Error("API tidak mengembalikan hasil valid");
     }
@@ -84,8 +76,8 @@ module.exports = async (ctx) => {
 
     // === Kirim hasil ke user ===
     const caption = isIndo
-      ? `🧠 *Deskripsi Gambar:*\n${promptText}\n\n⭐ Limit dikurangi ${cost}. Sisa: ${user.limit}`
-      : `🧠 *Image Description:*\n${promptText}\n\n⭐ Used ${cost} limit. Remaining: ${user.limit}`;
+      ? `🧠 *Deskripsi Gambar:*\n${promptText}\n`
+      : `🧠 *Image Description:*\n${promptText}\n`;
 
     await ctx.reply(caption, {
       parse_mode: "Markdown",

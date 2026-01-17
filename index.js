@@ -105,7 +105,7 @@ const videoPaths = [
   path.join(__dirname, "assets/thumbnail1.mp4"),
 ];
 
-// Fungsi untuk ambil video random
+// fungsi pengembilaan kontent random
 function getRandomVideo() {
   const index = Math.floor(Math.random() * videoPaths.length);
   return videoPaths[index];

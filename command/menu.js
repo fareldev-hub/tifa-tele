@@ -5,7 +5,21 @@ const { bot_name } = require("../settings");
 module.exports = async (ctx) => {
   try {
     const commandDir = path.join(__dirname);
-    const imagePath = path.join(__dirname, "../assets/image/welcome.jpg");
+
+    // 🔘 Daftar gambar
+    const images = [
+      path.join(__dirname, "../assets/image/welcome.jpg"),
+      path.join(__dirname, "../assets/image/celz.jpg")
+    ];
+
+    // 🔘 Pilih gambar random
+    function getRandomImage() {
+      const randomIndex = Math.floor(Math.random() * images.length);
+      return images[randomIndex];
+    }
+
+    const selectedImage = getRandomImage();
+
     const isIndo = ctx.isIndo || (ctx.from?.language_code || "").startsWith("id");
 
     // 🔍 Fungsi deteksi jenis perintah
@@ -17,11 +31,10 @@ module.exports = async (ctx) => {
         const reduceMoney = /user\.uang\s*-\s*=/i.test(content);
         const useXTR = /(ctx\.replyWithInvoice|currency\s*:\s*["']XTR["'])/i.test(content);
 
-        // Urutan prioritas label
-        if (useXTR) return "⭐️";        // Gunakan Stars (XTR)
-        if (reduceLimit && reduceMoney) return "🔺️"; // Kurangi limit & uang
-        if (reduceLimit) return "🔹️";  // Kurangi limit
-        if (reduceMoney) return "🔸️";  // Kurangi uang/saldo
+        if (useXTR) return "⭐️";
+        if (reduceLimit && reduceMoney) return "🔺️";
+        if (reduceLimit) return "🔹️";
+        if (reduceMoney) return "🔸️";
 
         return "";
       } catch {
@@ -29,7 +42,7 @@ module.exports = async (ctx) => {
       }
     }
 
-    // 🔍 Ambil daftar command dari folder dengan label otomatis
+    // 🔍 Ambil daftar command dari folder
     function getCommandsFromFolder(folderPath) {
       if (!fs.existsSync(folderPath)) return [];
       return fs
@@ -100,24 +113,23 @@ ${sections.join("\n\n")}
 
 ━━━━━━━━━━━━━━━━━━`;
 
-// 🔘 Tombol interaktif fixed dengan URL
-const inlineKeyboard = [
-  [
-    { text: "Feedback", url: "https://t.me/VionixDev" },  // ganti dengan link Telegram owner
-    { text: "Donate", url: "https://saweria.co/fareldeveloper" },
-  ],
-  [{ text: "About", url: "https://fareldev.up.railway.app" }], // bisa ke website/info bot
-];
+    // 🔘 Tombol interaktif
+    const inlineKeyboard = [
+      [
+        { text: "Feedback", url: "https://t.me/VionixDev" },
+        { text: "Donate", url: "https://saweria.co/fareldeveloper" },
+      ],
+      [{ text: "About", url: "https://fareldev.up.railway.app" }],
+    ];
 
-
-    // 🖼️ Kirim gambar pembuka
+    // 🖼️ Kirim gambar random
     await ctx.replyWithPhoto(
-      { source: imagePath },
+      { source: selectedImage },
       {
         caption: isIndo
           ? `*✨ Menu ${bot_name} ✨*
 ━━━━━━━━━━━━━━━━━━
-haloo, saya adalah ${bot_name} sebuah bot multi fungsi yang siap membantu kamuu.`
+Haloo, saya adalah ${bot_name} sebuah bot multi fungsi yang siap membantu kamuu.`
           : `*✨ ${bot_name} Menu ✨*
 ━━━━━━━━━━━━━━━━━━
 Hello, I am ${bot_name} a multi-function bot ready to help you.`,

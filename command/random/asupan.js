@@ -17,11 +17,11 @@ module.exports = async (ctx) => {
     }
 
     const waitMsg = await ctx.reply(
-      isIndo ? "⏳ Mengambil video aspupan..." : "⏳ Fetching random video...",
+      isIndo ? "⏳ Mengambil video asupan..." : "⏳ Fetching random video...",
       { reply_to_message_id: ctx.message?.message_id }
     );
 
-    // === Panggil API aspupan ===
+    // === Panggil API asupan ===
     const res = await fetch("https://api.deline.web.id/random/asupan");
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
@@ -46,7 +46,7 @@ module.exports = async (ctx) => {
 
     // Kirim video
     await ctx.replyWithVideo({ source: buffer }, {
-      caption: isIndo ? "📹 Video Aspupan Random" : "📹 Random Aspupan Video",
+      caption: isIndo ? "📹 Video asupan Random" : "📹 Random asupan Video",
       reply_to_message_id: ctx.message?.message_id
     });
 
@@ -58,10 +58,10 @@ module.exports = async (ctx) => {
     try { await ctx.telegram.deleteMessage(ctx.chat.id, waitMsg.message_id); } catch (_) {}
 
   } catch (err) {
-    console.error("❌ Error di /aspupan:", err);
+    console.error("❌ Error di /asupan:", err);
     ctx.reply(
       isIndo
-        ? "❌ Gagal mengambil video aspupan 😥"
+        ? "❌ Gagal mengambil video asupan 😥"
         : "❌ Failed to fetch random video 😥",
       { reply_to_message_id: ctx.message?.message_id }
     );

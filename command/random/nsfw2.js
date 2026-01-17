@@ -11,11 +11,13 @@ module.exports = async (ctx) => {
     const user = loadUser(ctx.from.id) || { limit: 0 };
     const cost = 1; // limit per penggunaan
 
-    if (user.limit < cost) {
+    // 🔒 Cek uang
+    let price = "15000"
+    if (user.uang <= price) {
       return ctx.reply(
         isIndo
-          ? "🚫 Limit kamu sudah habis. Tunggu 24 jam untuk reset."
-          : "🚫 Your limit has run out. Please wait 24 hours for reset.",
+          ? `🚫 Saldo kamu tidak cukup ini membutuhkan Rp${price} uang. silahkan /topup untuk menambah uang kamu.`
+          : `🚫 Your balance is insufficient, this requires Rp${price}. Please top up to add more money.`,
         { reply_to_message_id: ctx.message?.message_id }
       );
     }
@@ -33,16 +35,15 @@ module.exports = async (ctx) => {
     const buffer = Buffer.from(await res.arrayBuffer());
 
     await ctx.replyWithPhoto({ source: buffer }, {
-      caption: isIndo ? "🔞 NSFW Random" : "🔞 Random NSFW",
+      caption: isIndo ? `🔞 NSFW Random\n\n💎 Harga : -Rp${price}` : `🔞 Random NSFW\n\n💎 Price : -Rp${price}`,
       reply_to_message_id: ctx.message?.message_id
     });
 
-    // Kurangi limit
-    user.limit -= cost;
+    user.uang -= price;
     saveUser(ctx.from.id, user);
 
     // Hapus loading
-    try { await ctx.telegram.deleteMessage(ctx.chat.id, waitMsg.message_id); } catch (_) {}
+    try { await ctx.telegram.deleteMessage(ctx.chat.id, waitMsg.message_id); } catch (_) { }
 
   } catch (err) {
     console.error("❌ Error di /nsfw2:", err);

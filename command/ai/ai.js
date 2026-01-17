@@ -1,20 +1,37 @@
-const fs = require("fs");
-const path = require("path");
 const fetch = require("node-fetch");
 const { loadUser, saveUser } = require("../../handler");
-const { bot_name } = require("../../settings");
 
 module.exports = async (ctx) => {
+  const isIndo = (ctx.from?.language_code || "").startsWith("id");
+
+  // Helper reply yang AMAN
+  const safeReply = async (text, extra = {}) => {
+    try {
+      const opts = { ...extra };
+
+      // Support supergroup topics
+      if (ctx.message?.message_thread_id) {
+        opts.message_thread_id = ctx.message.message_thread_id;
+      }
+
+      return await ctx.reply(text, opts);
+    } catch (e) {
+      console.error("❌ safeReply error:", e.message);
+      return null;
+    }
+  };
+
   try {
+    // Pastikan command dari message
+    if (!ctx.message?.text) return;
+
     const user = loadUser(ctx.from.id, ctx.from.first_name);
-    const isIndo = (ctx.from?.language_code || "").startsWith("id");
 
     if (user.limit <= 0) {
-      return ctx.reply(
+      return safeReply(
         isIndo
           ? "🚫 Limit kamu sudah habis. Tunggu 24 jam untuk reset."
-          : "🚫 Your daily limit has run out. Please wait 24 hours for reset.",
-        { reply_to_message_id: ctx.message?.message_id }
+          : "🚫 Your daily limit has run out. Please wait 24 hours for reset."
       );
     }
 
@@ -22,11 +39,10 @@ module.exports = async (ctx) => {
     const replyMsg = ctx.message.reply_to_message;
 
     if (!input && !replyMsg) {
-      return ctx.reply(
+      return safeReply(
         isIndo
-          ? "💬 Gunakan format: /ai <pesan> atau balas pesan dengan /ai <teks>"
-          : "💬 Use format: /ai <message> or reply to a message with /ai <text>",
-        { reply_to_message_id: ctx.message?.message_id }
+          ? "💬 Gunakan format:\n/ai <pesan>\natau balas pesan dengan /ai"
+          : "💬 Use format:\n/ai <message>\nor reply to a message with /ai"
       );
     }
 
@@ -34,38 +50,47 @@ module.exports = async (ctx) => {
     user.limit -= 1;
     saveUser(ctx.from.id, user);
 
-    // Thinking message
-    const thinkingMsg = await ctx.reply(
-      isIndo ? "💭 Sedang berpikir..." : "💭 Thinking...",
-      { reply_to_message_id: ctx.message?.message_id }
+    // Thinking message (TANPA reply_to_message_id)
+    const thinkingMsg = await safeReply(
+      isIndo ? "💭 Sedang berpikir..." : "💭 Thinking..."
     );
 
-    // Loading animation
-    const states = ["", ".", "..", "..."];
+    if (!thinkingMsg?.message_id) return;
+
+    // Animasi loading
+    const dots = ["", ".", "..", "..."];
     let i = 0;
+
     const interval = setInterval(() => {
-      ctx.telegram.editMessageText(
-        ctx.chat.id,
-        thinkingMsg.message_id,
-        undefined,
-        `${isIndo ? "💭 Sedang berpikir" : "💭 Thinking"}${states[i++ % states.length]}`
-      ).catch(() => {});
+      ctx.telegram
+        .editMessageText(
+          ctx.chat.id,
+          thinkingMsg.message_id,
+          ctx.message?.message_thread_id,
+          `${isIndo ? "💭 Sedang berpikir" : "💭 Thinking"}${dots[i++ % dots.length]}`
+        )
+        .catch(() => {});
     }, 900);
 
-    // Gabungkan konteks teks
+    // Bangun prompt
     let promptText = "";
 
     if (replyMsg?.text) {
-      promptText = `Pesan sebelumnya: "${replyMsg.text}"\nBalasan pengguna: "${input || "(tidak ada teks tambahan)"}"`;
+      promptText =
+        `Pesan sebelumnya:\n"${replyMsg.text}"\n\n` +
+        `Balasan pengguna:\n"${input || "(tidak ada teks tambahan)"}"`;
     } else if (replyMsg?.photo) {
       promptText = input || "Tolong jelaskan gambar tersebut.";
     } else {
       promptText = input;
     }
 
-    // Call endpoint tifa
-    const url = `https://endpoint-hub.up.railway.app/api/chatai/tifa?text=${encodeURIComponent(promptText)}`;
-    const res = await fetch(url);
+    // Call AI endpoint
+    const url = `https://endpoint-hub.up.railway.app/api/chatai/tifa?text=${encodeURIComponent(
+      promptText
+    )}`;
+
+    const res = await fetch(url, { timeout: 60_000 });
     const json = await res.json();
 
     clearInterval(interval);
@@ -74,10 +99,11 @@ module.exports = async (ctx) => {
       json?.response ||
       (isIndo ? "Aku bingung jawabnya 😅" : "I'm not sure 😅");
 
+    // Edit thinking → jawaban
     await ctx.telegram.editMessageText(
       ctx.chat.id,
       thinkingMsg.message_id,
-      undefined,
+      ctx.message?.message_thread_id,
       aiText,
       {
         parse_mode: "Markdown",
@@ -95,11 +121,11 @@ module.exports = async (ctx) => {
     );
   } catch (err) {
     console.error("❌ Error di /ai:", err);
-    ctx.reply(
-      (ctx.from?.language_code || "").startsWith("id")
+
+    safeReply(
+      isIndo
         ? "⚠️ Terjadi kesalahan saat memproses /ai 😥"
-        : "⚠️ An error occurred while processing /ai 😥",
-      { reply_to_message_id: ctx.message?.message_id }
+        : "⚠️ An error occurred while processing /ai 😥"
     );
   }
 };

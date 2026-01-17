@@ -234,6 +234,24 @@ bot.on("text", async (ctx) => {
   );
 });
 
+bot.on("message", (ctx) => {
+  if (ctx.chat.type !== "private") {
+    global.groupMembers = global.groupMembers || {};
+    global.groupMembers[ctx.chat.id] = global.groupMembers[ctx.chat.id] || [];
+    const exists = global.groupMembers[ctx.chat.id].some(
+      (u) => u.id === ctx.from.id
+    );
+    if (!exists) {
+      global.groupMembers[ctx.chat.id].push({
+        id: ctx.from.id,
+        first_name: ctx.from.first_name,
+        username: ctx.from.username,
+      });
+    }
+  }
+});
+
+
 /* === Payment Handler === */
 bot.on("successful_payment", async (ctx) => {
   try {

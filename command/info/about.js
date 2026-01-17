@@ -17,6 +17,7 @@ Halo ${ctx.from.username ? "@" + ctx.from.username : ctx.from.first_name} ${bot_
 ${lines}
 <b>👨 Developer:</b> Farel Alfareza
 <b>💻 Programmer:</b> Farel Alfareza  
+<b>🔗 API 1:</b> <a href="https://endpoint-hub.up.railway.app">Endpoint-Hub</a>
 <b>🔗 API 1:</b> <a href="https://api.siputzx.my.id">Siputzx API</a>
 <b>🔗 API 2:</b> <a href="https://api.nekolabs.web.id">Nekolabs</a>
 <b>🔗 API 3:</b> <a href="https://api.deline.web.id">Deline API</a>

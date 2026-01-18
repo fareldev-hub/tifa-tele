@@ -1,11 +1,11 @@
 const axios = require("axios")
 const { loadUser, saveUser } = require("../../handler");
-const user = loadUser(ctx.from.id) || { limit: 0 };
 
 module.exports = async (ctx) => {
   const replyId = ctx.message.message_id
   let loadingMsg
-
+  const user = loadUser(ctx.from.id) || { limit: 0 };
+  
   try {
     const username = ctx.message.text.split(" ").slice(1).join(" ").trim()
     if (!username) {

@@ -18,11 +18,11 @@ ${lines}
 <b>👨 Developer:</b> Farel Alfareza
 <b>💻 Programmer:</b> Farel Alfareza  
 <b>🔗 API 1:</b> <a href="https://endpoint-hub.up.railway.app">Endpoint-Hub</a>
-<b>🔗 API 1:</b> <a href="https://api.siputzx.my.id">Siputzx API</a>
-<b>🔗 API 2:</b> <a href="https://api.nekolabs.web.id">Nekolabs</a>
-<b>🔗 API 3:</b> <a href="https://api.deline.web.id">Deline API</a>
-<b>🔗 API 4:</b> <a href="https://api.yupra.my.id">Yupra</a>
-<b>🔗 API 5:</b> <a href="https://zellapi.autos">Zellapi</a>
+<b>🔗 API 2:</b> <a href="https://api.siputzx.my.id">Siputzx API</a>
+<b>🔗 API 3:</b> <a href="https://api.nekolabs.web.id">Nekolabs</a>
+<b>🔗 API 4:</b> <a href="https://api.deline.web.id">Deline API</a>
+<b>🔗 API 5:</b> <a href="https://api.yupra.my.id">Yupra</a>
+<b>🔗 API 6:</b> <a href="https://zellapi.autos">Zellapi</a>
 
 ${lines}
 <b>🌐 Akun Sosial:</b>

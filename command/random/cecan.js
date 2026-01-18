@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { loadUser, saveUser } = require("../../handler");
 
 const AVAILABLE = [
   "indonesia",
@@ -12,7 +13,7 @@ const AVAILABLE = [
 module.exports = async (ctx) => {
   try {
     const isIndo = (ctx.from?.language_code || "").startsWith("id");
-
+    const user = loadUser(ctx.from.id) || { limit: 0 };
     const text = ctx.message?.text || "";
     const country = text.split(" ").slice(1).join(" ").trim().toLowerCase();
 
@@ -23,6 +24,15 @@ module.exports = async (ctx) => {
           : `💡 Use:\n/cecan <country>\n\nAvailable:\n${AVAILABLE.join(", ")}`,
         { reply_to_message_id: ctx.message?.message_id }
       );
+    }
+
+       // 🔒 Cek limit
+    if (user.limit <= 0) {
+      const msg =
+        lang === "id"
+          ? "🚫 Limit kamu sudah habis. Tunggu 24 jam untuk reset."
+          : "🚫 Your daily limit has run out. Please wait 24 hours for reset.";
+      return ctx.reply(msg, { reply_to_message_id: ctx.message?.message_id });
     }
 
     const apiUrl = `https://api.siputzx.my.id/api/r/cecan/${country}`;
@@ -77,6 +87,12 @@ module.exports = async (ctx) => {
         reply_to_message_id: ctx.message?.message_id,
       }
     );
+
+    // 💰 Kurangi limit + hapus file
+    user.limit -= 1;
+    saveUser(ctx.from.id, user);
+    fs.unlinkSync(filePath);
+    
   } catch (err) {
     console.error("❌ /cecan error:", err);
 

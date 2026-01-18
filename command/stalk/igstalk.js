@@ -1,7 +1,10 @@
 const axios = require("axios")
+const { loadUser, saveUser } = require("../../handler");
+
 
 module.exports = async (ctx) => {
   const replyId = ctx.message.message_id
+  const user = loadUser(ctx.from.id) || { limit: 0 };
   let loadingMsg
 
   try {
@@ -18,6 +21,15 @@ module.exports = async (ctx) => {
       "📸 Mengambil data Instagram...",
       { reply_to_message_id: replyId }
     )
+
+    // 🔒 Cek limit
+    if (user.limit <= 0) {
+      const msg =
+        lang === "id"
+          ? "🚫 Limit kamu sudah habis. Tunggu 24 jam untuk reset."
+          : "🚫 Your daily limit has run out. Please wait 24 hours for reset.";
+      return ctx.reply(msg, { reply_to_message_id: ctx.message?.message_id });
+    }    
 
     const url = `https://api.siputzx.my.id/api/stalk/instagram?username=${encodeURIComponent(username)}`
     const res = await axios.get(url)
@@ -68,6 +80,10 @@ module.exports = async (ctx) => {
         reply_to_message_id: replyId
       }
     )
+    // 💰 Kurangi limit + hapus file
+    user.limit -= 1;
+    saveUser(ctx.from.id, user);
+    fs.unlinkSync(filePath);
 
   } catch (err) {
     console.error(err)

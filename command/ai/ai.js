@@ -7,7 +7,10 @@ module.exports = async (ctx) => {
   // Helper reply yang AMAN
   const safeReply = async (text, extra = {}) => {
     try {
-      const opts = { ...extra };
+      const opts = {
+        reply_to_message_id: ctx.message?.message_id, // ✅ reply ke command
+        ...extra,
+      };
 
       // Support supergroup topics
       if (ctx.message?.message_thread_id) {
@@ -50,7 +53,7 @@ module.exports = async (ctx) => {
     user.limit -= 1;
     saveUser(ctx.from.id, user);
 
-    // Thinking message (TANPA reply_to_message_id)
+    // Thinking message (reply ke command)
     const thinkingMsg = await safeReply(
       isIndo ? "💭 Sedang berpikir..." : "💭 Thinking..."
     );
@@ -67,7 +70,9 @@ module.exports = async (ctx) => {
           ctx.chat.id,
           thinkingMsg.message_id,
           ctx.message?.message_thread_id,
-          `${isIndo ? "💭 Sedang berpikir" : "💭 Thinking"}${dots[i++ % dots.length]}`
+          `${isIndo ? "💭 Sedang berpikir" : "💭 Thinking"}${
+            dots[i++ % dots.length]
+          }`
         )
         .catch(() => {});
     }, 900);

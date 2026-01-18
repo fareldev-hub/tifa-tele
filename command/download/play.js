@@ -126,10 +126,10 @@ module.exports = async (ctx) => {
     );
 
   } finally {
-    if (imgPath && fs.existsSync(imgPath)) {
-      try {
-        fs.unlinkSync(imgPath);
-      } catch {}
+    try {
+      fs.unlinkSync(imgPath);
+    } catch {
+      /* abaikan error jika file sudah terhapus */
     }
   }
 };

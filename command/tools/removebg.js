@@ -47,8 +47,8 @@ module.exports = async (ctx) => {
     if (!fileId) {
       return ctx.reply(
         isIndo
-          ? "⚠️ Kirim gambar atau reply gambar dengan /removebg"
-          : "⚠️ Send or reply an image with /removebg",
+          ? "⚠️ reply gambar dengan /removebg"
+          : "⚠️ reply an image with /removebg",
         replyOpts
       );
     }

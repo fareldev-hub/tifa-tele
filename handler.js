@@ -1,8 +1,7 @@
 const fs = require("fs");
 const path = require("path");
-const { Markup } = require("telegraf");
 
-// 🎨 Warna ANSI untuk terminal
+// === ANSI COLORS ===
 const color = {
   reset: "\x1b[0m",
   blueBg: "\x1b[44m",
@@ -14,10 +13,9 @@ const color = {
   bold: "\x1b[1m"
 };
 
-// === Database Path ===
+// === DATABASE ===
 const dbPath = path.join(__dirname, "database", "users.json");
 
-// Pastikan direktori dan file database tersedia
 if (!fs.existsSync(path.dirname(dbPath))) {
   fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 }
@@ -25,23 +23,20 @@ if (!fs.existsSync(dbPath)) {
   fs.writeFileSync(dbPath, JSON.stringify({}, null, 2));
 }
 
-// === Database Utilities ===
 function loadDB() {
   try {
-    const data = fs.readFileSync(dbPath, "utf8");
-    return JSON.parse(data || "{}");
-  } catch (err) {
-    console.error(color.red + "⚠️ users.json rusak — membuat ulang..." + color.reset);
+    return JSON.parse(fs.readFileSync(dbPath, "utf8") || "{}");
+  } catch {
     fs.writeFileSync(dbPath, JSON.stringify({}, null, 2));
     return {};
   }
 }
 
-function saveDB(data) {
-  fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
+function saveDB(db) {
+  fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
 }
 
-// === User Management ===
+// === USER ===
 function loadUser(id, name = "User") {
   const db = loadDB();
 
@@ -53,7 +48,7 @@ function loadUser(id, name = "User") {
       level: 1,
       limit: 20,
       uang: 1000,
-      rank: "Bronze",
+      rank: "Newbie",
       isBanned: false,
       isPremium: false
     };
@@ -71,7 +66,7 @@ function saveUser(id, data) {
   saveDB(db);
 }
 
-// === EXP System ===
+// === EXP ===
 function addExp(id, name) {
   const user = loadUser(id, name);
   const gain = Math.floor(Math.random() * 10) + 5;
@@ -85,120 +80,126 @@ function addExp(id, name) {
     user.level++;
     user.uang += 100;
     levelUp = true;
-}
-user.rank =
-  user.level < 2   ? "Newbine" :
-  user.level < 5   ? "Bronze" :
-  user.level < 10  ? "Silver" :
-  user.level < 20  ? "Gold" :
-  user.level < 35  ? "Platinum" :
-  user.level < 50  ? "Emerald" :
-  user.level < 70  ? "Sapphire" :
-  user.level < 100  ? "Ruby" :
-  user.level < 150 ? "Diamond" :
-  "Legenda";
+  }
 
+  user.rank =
+    user.level < 2 ? "Newbie" :
+    user.level < 5 ? "Bronze" :
+    user.level < 10 ? "Silver" :
+    user.level < 20 ? "Gold" :
+    user.level < 35 ? "Platinum" :
+    user.level < 50 ? "Emerald" :
+    user.level < 70 ? "Sapphire" :
+    user.level < 100 ? "Ruby" :
+    user.level < 150 ? "Diamond" :
+    "Legenda";
 
   saveUser(id, user);
   return { ...user, gain, levelUp };
 }
 
-// === Welcome Handler ===
+// === SAFE SEND ===
+async function safeReply(ctx, method, ...args) {
+  try {
+    return await ctx[method](...args);
+  } catch (err) {
+    if (err?.response?.error_code === 403) return null;
+    console.error("❌ Telegram send error:", err.message);
+    return null;
+  }
+}
+
+// === WELCOME ===
 function setupWelcomeHandler(bot) {
-  bot.telegram.getMe().then(info => {
-    bot.botInfo = info;
-  });
+  bot.telegram.getMe().then(info => bot.botInfo = info);
 
   bot.on("new_chat_members", async (ctx) => {
-    try {
-      if (!bot.botInfo) return;
+    if (!bot.botInfo) return;
 
-      for (const member of ctx.message.new_chat_members) {
-        if (member.is_bot) continue; // ✅ Jangan sambut bot
-        if (member.id === bot.botInfo.id) continue;
+    for (const member of ctx.message.new_chat_members) {
+      if (member.is_bot || member.id === bot.botInfo.id) continue;
 
-        const name = member.first_name || "Pengguna";
-        const mention = `[${name}](tg://user?id=${member.id})`;
-        const lang = member.language_code || "id";
+      const name = member.first_name || "Pengguna";
+      loadUser(member.id, name);
 
-        loadUser(member.id, name);
+      const mention = `<a href="tg://user?id=${member.id}">${name}</a>`;
+      const msg =
+        `👋 Halo ${mention}!\n\n` +
+        `Selamat datang di <b>${ctx.chat.title}</b> 🎉\n` +
+        `/start | /menu`;
 
-        const msg = lang.startsWith("id")
-          ? `👋 Halo ${mention}!\n\nSelamat datang di *${ctx.chat.title}* 🎉\nGunakan perintah berikut untuk memulai bot:\n/start or /menu`
-          : `👋 Hello ${mention}!\n\nWelcome to *${ctx.chat.title}* 🎉\nUse the following command to start the bot:\n/start or /menu`;
-
-        await ctx.replyWithMarkdown(msg);
-
-        // === LOGGING KE TERMINAL ===
-        const time = new Date().toLocaleString("id-ID", { hour12: false });
-        console.log(
-          color.gray + "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" + color.reset
-        );
-        console.log(`${color.blueBg}${color.bold}${color.cyan} 🕒 ${time} ${color.reset}`);
-        console.log(`${color.yellow}👥 Grup     :${color.reset} ${ctx.chat.title}`);
-        console.log(`${color.yellow}👤 Nama     :${color.reset} ${name}`);
-        console.log(`${color.yellow}🆔 ID       :${color.reset} ${member.id}`);
-        console.log(`${color.green}✅ Status   :${color.reset} Bergabung / Ditambahkan`);
-        console.log(
-          color.gray + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" + color.reset
-        );
-      }
-    } catch (err) {
-      console.error(color.red + "❌ Gagal menyapa member baru:" + color.reset, err);
+      await safeReply(ctx, "reply", msg, {
+        parse_mode: "HTML",
+        message_thread_id: ctx.message?.message_thread_id
+      });
     }
   });
 }
 
-// === 🔰 Middleware: Logger + Anti-Banned ===
+// === BAN MIDDLEWARE ===
 function setupBanMiddleware(bot) {
   bot.use(async (ctx, next) => {
-    try {
-      if (!ctx.from) return next();
-      const user = loadUser(ctx.from.id, ctx.from.first_name);
+    if (!ctx.from) return next();
 
-      // Ambil teks dari berbagai tipe update
-      const msgText =
-        ctx.message?.text ||
-        ctx.editedMessage?.text ||
-        ctx.callbackQuery?.data ||
-        ctx.inlineQuery?.query ||
-        ctx.chosenInlineResult?.query ||
-        "[non-text update]";
+    const user = loadUser(ctx.from.id, ctx.from.first_name);
 
-      const time = new Date().toLocaleString("id-ID", { hour12: false });
+    // === Ambil isi pesan dari semua tipe update ===
+    let content = "[unknown]";
+    let type = "unknown";
 
-      // === Log ke terminal ===
-      console.log(color.gray + "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" + color.reset);
-      console.log(`${color.blueBg}${color.bold}${color.cyan} 🕒 ${time} ${color.reset}`);
-      console.log(`${color.yellow}👤 User ID :${color.reset} ${ctx.from.id}`);
-      console.log(`${color.yellow}📛 Nama    :${color.reset} ${ctx.from.first_name}`);
-      console.log(`${color.yellow}💬 Pesan   :${color.reset} ${msgText}`);
-      console.log(color.gray + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" + color.reset);
+    if (ctx.message) {
+      type = ctx.message.photo
+        ? "photo"
+        : ctx.message.video
+        ? "video"
+        : ctx.message.sticker
+        ? "sticker"
+        : ctx.message.document
+        ? "document"
+        : "text";
 
-      // === Jika user dibanned ===
-      if (user.isBanned) {
-        console.log(color.red + `🚫 User ${ctx.from.first_name} (${ctx.from.id}) dibanned — abaikan perintah.` + color.reset);
-        try {
-          let bannedMsg = `Id :
-🚫 Kau telah di banner hubungi /owner untuk meminta peninjauan kembali.
-
-En :
-🚫 You have been bannered contact /owner to request a review.`
-          await ctx.reply(bannedMsg, {
-            parse_mode: "Markdown"
-          });
-        } catch {}
-        return;
-      }
-
-      // Lanjut ke handler berikutnya
-      await next();
-    } catch (err) {
-      console.error(color.red + "❌ Error di setupBanMiddleware:" + color.reset, err);
-      return next();
+      content =
+        ctx.message.text ||
+        ctx.message.caption ||
+        `[${type.toUpperCase()}]`;
+    } else if (ctx.editedMessage) {
+      type = "edited";
+      content = ctx.editedMessage.text || ctx.editedMessage.caption || "[edited]";
+    } else if (ctx.callbackQuery) {
+      type = "callback";
+      content = ctx.callbackQuery.data;
+    } else if (ctx.inlineQuery) {
+      type = "inline";
+      content = ctx.inlineQuery.query;
+    } else {
+      content = "[non-text update]";
     }
+
+    const time = new Date().toLocaleString("id-ID", { hour12: false });
+
+    // === LOG KE TERMINAL (LENGKAP) ===
+    console.log(
+      color.gray + "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" + color.reset
+    );
+    console.log(`${color.blueBg}${color.bold}${color.cyan} 🕒 ${time} ${color.reset}`);
+    console.log(`${color.yellow}👤 User   :${color.reset} ${ctx.from.first_name}`);
+    console.log(`${color.yellow}🆔 ID     :${color.reset} ${ctx.from.id}`);
+    console.log(`${color.yellow}💬 Tipe   :${color.reset} ${type}`);
+    console.log(`${color.yellow}📩 Pesan  :${color.reset} ${content}`);
+    console.log(
+      color.gray + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" + color.reset
+    );
+
+    // 🚫 Jika dibanned → stop
+    if (user.isBanned) {
+      console.log(color.red + "🚫 Banned user blocked" + color.reset);
+      return;
+    }
+
+    return next();
   });
 }
+
 
 module.exports = {
   loadUser,

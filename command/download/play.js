@@ -41,9 +41,9 @@ module.exports = async (ctx) => {
 
     await ctx.reply(
       isIndo
-        ? `🔍 Mencari *${query}*...`
-        : `🔍 Searching *${query}*...`,
-      { parse_mode: "Markdown", reply_to_message_id: ctx.message.message_id }
+        ? `🔍 Mencari ${query}...`
+        : `🔍 Searching ${query}...`,
+      { parse_mode: "HTML", reply_to_message_id: ctx.message.message_id }
     );
 
     /* =====================
@@ -84,9 +84,9 @@ module.exports = async (ctx) => {
       { source: imgPath },
       {
         caption: isIndo
-          ? `🎵 *${title}*\n👤 ${artist}\n🕓 ${duration}\n\n⬇️ Mengunduh audio...`
-          : `🎵 *${title}*\n👤 ${artist}\n🕓 ${duration}\n\n⬇️ Downloading audio...`,
-        parse_mode: "Markdown",
+          ? `🎵 ${title}\n👤 ${artist}\n🕓 ${duration}\n\n⬇️ Mengunduh audio...`
+          : `🎵 ${title}\n👤 ${artist}\n🕓 ${duration}\n\n⬇️ Downloading audio...`,
+        parse_mode: "HTML",
         reply_to_message_id: ctx.message.message_id,
       }
     );
@@ -109,8 +109,8 @@ module.exports = async (ctx) => {
       {
         title,
         performer: artist,
-        caption: `🎶 *${title}* — ${artist}`,
-        parse_mode: "Markdown",
+        caption: `🎶 ${title} — ${artist}`,
+        parse_mode: "HTML",
         reply_to_message_id: ctx.message.message_id,
       }
     );
@@ -126,10 +126,10 @@ module.exports = async (ctx) => {
     );
 
   } finally {
-    if (imgPath && fs.existsSync(imgPath)) {
-      try {
-        fs.unlinkSync(imgPath);
-      } catch {}
+    try {
+      fs.unlinkSync(imgPath);
+    } catch {
+      /* abaikan error jika file sudah terhapus */
     }
   }
 };

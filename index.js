@@ -183,6 +183,30 @@ bot.on("text", async (ctx) => {
   // hanya user pemilik soal
   if (session.userId !== ctx.from.id) return;
 
+  // ===============================
+  // ⏱️ TIMER 30 DETIK
+  // ===============================
+  if (!session.startTime) {
+    session.startTime = Date.now();
+  }
+
+  const TIME_LIMIT = 30 * 1000; // 30 detik
+  const elapsed = Date.now() - session.startTime;
+
+  if (elapsed > TIME_LIMIT) {
+    global.gameSession.delete(reply.message_id);
+
+    return ctx.reply(
+      `⏰ <b>Waktu habis!</b>\n\n<b>Jawaban:</b> ${session.answer}${
+        session.desc ? `\n🤣 ${session.desc}` : ""
+      }`,
+      {
+        reply_to_message_id: ctx.message.message_id,
+        parse_mode: "HTML",
+      }
+    );
+  }
+
   const answer = ctx.message.text.trim().toLowerCase();
 
   // ===============================
@@ -199,7 +223,10 @@ bot.on("text", async (ctx) => {
 
       return ctx.reply(
         "✅ <b>Jawaban BENAR!</b>\n🎉 EXP +50",
-        { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" }
+        {
+          reply_to_message_id: ctx.message.message_id,
+          parse_mode: "HTML",
+        }
       );
     }
 
@@ -207,7 +234,10 @@ bot.on("text", async (ctx) => {
     if (session.type === "caklontong") {
       return ctx.reply(
         `✅ <b>BENAR!</b>\n🤣 ${session.desc}`,
-        { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" }
+        {
+          reply_to_message_id: ctx.message.message_id,
+          parse_mode: "HTML",
+        }
       );
     }
   }
@@ -224,15 +254,24 @@ bot.on("text", async (ctx) => {
       `❌ <b>Salah 3x!</b>\n\n<b>Jawaban:</b> ${session.answer}${
         session.desc ? `\n🤣 ${session.desc}` : ""
       }`,
-      { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" }
+      {
+        reply_to_message_id: ctx.message.message_id,
+        parse_mode: "HTML",
+      }
     );
   }
 
+  const sisaWaktu = Math.max(
+    0,
+    Math.ceil((TIME_LIMIT - elapsed) / 1000)
+  );
+
   return ctx.reply(
-    `❌ Salah!\n📌 Kesempatan tersisa: ${3 - session.wrong}x`,
+    `❌ Salah!\n📌 Kesempatan tersisa: ${3 - session.wrong}x\n⏳ Sisa waktu: ${sisaWaktu} detik`,
     { reply_to_message_id: ctx.message.message_id }
   );
 });
+
 
 bot.on("message", (ctx) => {
   if (ctx.chat.type !== "private") {

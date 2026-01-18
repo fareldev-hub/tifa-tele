@@ -39,8 +39,8 @@ module.exports = async (ctx) => {
     if (!fileId) {
       return ctx.reply(
         isIndo
-          ? "⚠️ Kirim gambar dengan caption /hd atau reply gambar dengan /hd"
-          : "⚠️ Send an image with /hd caption or reply to an image with /hd",
+          ? "⚠️ reply gambar dengan /hd"
+          : "⚠️ reply to an image with /hd",
         { reply_to_message_id: ctx.message?.message_id }
       );
     }

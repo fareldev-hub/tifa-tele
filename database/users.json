@@ -1,4 +1,15 @@
 {
+  "617667472": {
+    "id": 617667472,
+    "name": "ㅤVALDOOOㅤ",
+    "exp": 7,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
   "831313667": {
     "id": 831313667,
     "name": "Федор",
@@ -57,7 +68,7 @@
   "1773153185": {
     "id": 1773153185,
     "name": "#-14 ROYKENZ [ 𝐑𝐄𝐀𝐋 ] ⚡",
-    "exp": 76,
+    "exp": 146,
     "level": 2,
     "limit": 20,
     "uang": 1100,
@@ -100,7 +111,7 @@
   },
   "8485352162": {
     "id": 8485352162,
-    "name": "User",
+    "name": "Farel",
     "exp": 179,
     "level": 6,
     "limit": 5,
@@ -771,10 +782,10 @@
   "7847933290": {
     "id": 7847933290,
     "name": ".",
-    "exp": 314,
-    "level": 2,
+    "exp": 25,
+    "level": 3,
     "limit": 20,
-    "uang": 1100,
+    "uang": 1200,
     "rank": "Bronze",
     "isBanned": false,
     "isPremium": false,
@@ -1419,7 +1430,7 @@
   "6993072883": {
     "id": 6993072883,
     "name": "KENNOX",
-    "exp": 186,
+    "exp": 214,
     "level": 1,
     "limit": 20,
     "uang": 1000,

@@ -1,16 +1,20 @@
 const fetch = require("node-fetch");
+const { loadUser, saveUser } = require("../../handler");
 
-/* =====================
-   MARKDOWN ESCAPE
-===================== */
-const escapeMD = (text = "") =>
-  text.replace(/[_*[\]()~`>#+-=|{}.!]/g, "\\$&");
+/* === Escape HTML === */
+const escapeHTML = (text = "") =>
+  text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 
+/* === Spotify Command === */
 module.exports = async (ctx) => {
   try {
     if (!ctx.message || !ctx.from) return;
 
     const lang = (ctx.from.language_code || "").startsWith("id") ? "id" : "en";
+    const user = loadUser(ctx.from.id, ctx.from.first_name);
 
     /* =====================
        QUERY
@@ -21,18 +25,33 @@ module.exports = async (ctx) => {
     if (!query) {
       return ctx.reply(
         lang === "id"
-          ? "💡 Gunakan: /spotify <judul lagu>"
-          : "💡 Use: /spotify <song title>",
-        { reply_to_message_id: ctx.message.message_id }
+          ? "💡 <b>Cara pakai:</b>\n<code>/spotify judul lagu</code>"
+          : "💡 <b>Usage:</b>\n<code>/spotify song title</code>",
+        {
+          parse_mode: "HTML",
+          reply_to_message_id: ctx.message.message_id,
+        }
+      );
+    }
+
+    if (user.limit <= 0) {
+      return ctx.reply(
+        lang === "id"
+          ? "🚫 <b>Limit habis!</b>\n⏳ Reset otomatis setiap 24 jam."
+          : "🚫 <b>Daily limit reached!</b>\n⏳ Resets every 24 hours.",
+        {
+          parse_mode: "HTML",
+          reply_to_message_id: ctx.message.message_id,
+        }
       );
     }
 
     await ctx.reply(
       lang === "id"
-        ? `🔍 Mencari *${escapeMD(query)}* di Spotify...`
-        : `🔍 Searching *${escapeMD(query)}* on Spotify...`,
+        ? `🔍 <b>Mencari di Spotify...</b>\n🎵 <i>${escapeHTML(query)}</i>`
+        : `🔍 <b>Searching on Spotify...</b>\n🎵 <i>${escapeHTML(query)}</i>`,
       {
-        parse_mode: "Markdown",
+        parse_mode: "HTML",
         reply_to_message_id: ctx.message.message_id,
       }
     );
@@ -50,8 +69,13 @@ module.exports = async (ctx) => {
     const json = await res.json();
     if (!json?.success || !json.data?.length) {
       return ctx.reply(
-        lang === "id" ? "⚠️ Lagu tidak ditemukan." : "⚠️ Song not found.",
-        { reply_to_message_id: ctx.message.message_id }
+        lang === "id"
+          ? "⚠️ <b>Lagu tidak ditemukan.</b>"
+          : "⚠️ <b>Song not found.</b>",
+        {
+          parse_mode: "HTML",
+          reply_to_message_id: ctx.message.message_id,
+        }
       );
     }
 
@@ -65,49 +89,49 @@ module.exports = async (ctx) => {
       .slice(0, maxList)
       .map((v, i) => {
         return (
-          `*${i + 1}. ${escapeMD(v.title)}*\n` +
-          `👤 ${escapeMD(v.artist)}\n` +
-          `🕓 ${v.duration}\n` +
-          `🔗 ${v.track_url}`
+          `<b>${i + 1}. ${escapeHTML(v.title)}</b>\n` +
+          `👤 ${escapeHTML(v.artist)}\n` +
+          `🕓 <code>${v.duration}</code>\n` +
+          `🔗 <a href="${v.track_url}">Spotify</a>`
         );
       })
       .join("\n\n");
 
     /* =====================
-       CAPTION
+       CAPTION HTML
     ===================== */
     const caption =
       lang === "id"
-        ? `🎧 *HASIL SPOTIFY*
+        ? `🎧 <b>HASIL PENCARIAN SPOTIFY</b>
 
-🎵 ${escapeMD(first.title)}
-👤 ${escapeMD(first.artist)}
-💿 ${escapeMD(first.album)}
-🕓 ${first.duration}
+🎵 <b>${escapeHTML(first.title)}</b>
+👤 ${escapeHTML(first.artist)}
+💿 ${escapeHTML(first.album)}
+🕓 <code>${first.duration}</code>
 📅 ${first.release_date}
-🔗 ${first.track_url}
+🔗 <a href="${first.track_url}">Buka di Spotify</a>
 
 ━━━━━━━━━━━━━━━
-📃 *Lainnya:*
+📃 <b>Lagu Lainnya:</b>
 
 ${listText}
 
-💡 /play <judul lagu>`
-        : `🎧 *SPOTIFY RESULT*
+💡 <i>Ketik</i> <code>/play judul lagu</code>`
+        : `🎧 <b>SPOTIFY SEARCH RESULT</b>
 
-🎵 ${escapeMD(first.title)}
-👤 ${escapeMD(first.artist)}
-💿 ${escapeMD(first.album)}
-🕓 ${first.duration}
+🎵 <b>${escapeHTML(first.title)}</b>
+👤 ${escapeHTML(first.artist)}
+💿 ${escapeHTML(first.album)}
+🕓 <code>${first.duration}</code>
 📅 ${first.release_date}
-🔗 ${first.track_url}
+🔗 <a href="${first.track_url}">Open on Spotify</a>
 
 ━━━━━━━━━━━━━━━
-📃 *Others:*
+📃 <b>Other Results:</b>
 
 ${listText}
 
-💡 /play <song title>`;
+💡 <i>Type</i> <code>/play song title</code>`;
 
     /* =====================
        SEND RESULT
@@ -116,17 +140,23 @@ ${listText}
       { url: first.thumbnail },
       {
         caption,
-        parse_mode: "Markdown",
+        parse_mode: "HTML",
         reply_to_message_id: ctx.message.message_id,
       }
     );
+
+    user.limit -= 1;
+    saveUser(ctx.from.id, user);
   } catch (err) {
     console.error("❌ /spotify error:", err.message);
     await ctx.reply(
       (ctx.from?.language_code || "").startsWith("id")
-        ? "❌ Terjadi kesalahan."
-        : "❌ An error occurred.",
-      { reply_to_message_id: ctx.message?.message_id }
+        ? "❌ <b>Terjadi kesalahan.</b>"
+        : "❌ <b>An error occurred.</b>",
+      {
+        parse_mode: "HTML",
+        reply_to_message_id: ctx.message?.message_id,
+      }
     );
   }
 };

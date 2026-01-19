@@ -10,6 +10,8 @@ const https = require("https");
 const { GoogleGenAI } = require("@google/genai");
 require("dotenv").config();
 
+
+
 const {
   loadUser,
   saveUser,
@@ -171,106 +173,6 @@ bot.on("message", async (ctx, next) => {
 function escapeMarkdownV2(text) {
   return text.replace(/([_*\[\]()~`>#+\-=|{}.!])/g, "\\$1");
 }
-
-
-bot.on("text", async (ctx) => {
-  const reply = ctx.message.reply_to_message;
-  if (!reply || !reply.from?.is_bot) return;
-
-  const session = global.gameSession.get(reply.message_id);
-  if (!session) return;
-
-  // hanya user pemilik soal
-  if (session.userId !== ctx.from.id) return;
-
-  // ===============================
-  // ⏱️ TIMER 30 DETIK
-  // ===============================
-  if (!session.startTime) {
-    session.startTime = Date.now();
-  }
-
-  const TIME_LIMIT = 30 * 1000; // 30 detik
-  const elapsed = Date.now() - session.startTime;
-
-  if (elapsed > TIME_LIMIT) {
-    global.gameSession.delete(reply.message_id);
-
-    return ctx.reply(
-      `⏰ <b>Waktu habis!</b>\n\n<b>Jawaban:</b> ${session.answer}${
-        session.desc ? `\n🤣 ${session.desc}` : ""
-      }`,
-      {
-        reply_to_message_id: ctx.message.message_id,
-        parse_mode: "HTML",
-      }
-    );
-  }
-
-  const answer = ctx.message.text.trim().toLowerCase();
-
-  // ===============================
-  // JAWABAN BENAR
-  // ===============================
-  if (answer === session.answer) {
-    global.gameSession.delete(reply.message_id);
-
-    // asahotak → EXP
-    if (session.type === "asahotak") {
-      const user = loadUser(ctx.from.id, ctx.from.first_name);
-      user.exp = (user.exp || 0) + 50;
-      saveUser(ctx.from.id, user);
-
-      return ctx.reply(
-        "✅ <b>Jawaban BENAR!</b>\n🎉 EXP +50",
-        {
-          reply_to_message_id: ctx.message.message_id,
-          parse_mode: "HTML",
-        }
-      );
-    }
-
-    // caklontong → deskripsi lucu
-    if (session.type === "caklontong") {
-      return ctx.reply(
-        `✅ <b>BENAR!</b>\n🤣 ${session.desc}`,
-        {
-          reply_to_message_id: ctx.message.message_id,
-          parse_mode: "HTML",
-        }
-      );
-    }
-  }
-
-  // ===============================
-  // JAWABAN SALAH
-  // ===============================
-  session.wrong += 1;
-
-  if (session.wrong >= 3) {
-    global.gameSession.delete(reply.message_id);
-
-    return ctx.reply(
-      `❌ <b>Salah 3x!</b>\n\n<b>Jawaban:</b> ${session.answer}${
-        session.desc ? `\n🤣 ${session.desc}` : ""
-      }`,
-      {
-        reply_to_message_id: ctx.message.message_id,
-        parse_mode: "HTML",
-      }
-    );
-  }
-
-  const sisaWaktu = Math.max(
-    0,
-    Math.ceil((TIME_LIMIT - elapsed) / 1000)
-  );
-
-  return ctx.reply(
-    `❌ Salah!\n📌 Kesempatan tersisa: ${3 - session.wrong}x\n⏳ Sisa waktu: ${sisaWaktu} detik`,
-    { reply_to_message_id: ctx.message.message_id }
-  );
-});
 
 
 bot.on("message", (ctx) => {

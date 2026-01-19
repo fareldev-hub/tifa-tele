@@ -1,8 +1,19 @@
 {
+  "831313667": {
+    "id": 831313667,
+    "name": "Федор",
+    "exp": 9,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
   "1087968824": {
     "id": 1087968824,
     "name": "Group",
-    "exp": 290,
+    "exp": 304,
     "level": 5,
     "limit": 20,
     "uang": 1400,
@@ -21,24 +32,79 @@
     "isBanned": false,
     "isPremium": false
   },
-  "1773153185": {
-    "id": 1773153185,
-    "name": "#-14 ROYKENZ [ 𝐑𝐄𝐀𝐋 ] ⚡",
-    "exp": 297,
+  "1526914638": {
+    "id": 1526914638,
+    "name": "J2 🥠",
+    "exp": 6,
     "level": 1,
     "limit": 20,
     "uang": 1000,
-    "rank": "Newbine",
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "1547928671": {
+    "id": 1547928671,
+    "name": "Cristhian",
+    "exp": 6,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "1773153185": {
+    "id": 1773153185,
+    "name": "#-14 ROYKENZ [ 𝐑𝐄𝐀𝐋 ] ⚡",
+    "exp": 76,
+    "level": 2,
+    "limit": 20,
+    "uang": 1100,
+    "rank": "Bronze",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "1869442932": {
+    "id": 1869442932,
+    "name": "أأأم نوره",
+    "exp": 9,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "1972256132": {
+    "id": 1972256132,
+    "name": "Omar",
+    "exp": 9,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "2007056031": {
+    "id": 2007056031,
+    "name": "S_y_m_r_a_k",
+    "exp": 7,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
     "isBanned": false,
     "isPremium": false
   },
   "8485352162": {
     "id": 8485352162,
-    "name": "Farel",
-    "exp": 317,
-    "level": 5,
-    "limit": 7,
-    "uang": 431400,
+    "name": "User",
+    "exp": 179,
+    "level": 6,
+    "limit": 5,
+    "uang": 416500,
     "rank": "Silver",
     "isBanned": false,
     "isPremium": true,
@@ -73,7 +139,7 @@
   "8228401891": {
     "id": 8228401891,
     "name": "Celz",
-    "exp": 183,
+    "exp": 310,
     "level": 9,
     "limit": 20,
     "uang": 1800,
@@ -83,12 +149,12 @@
   },
   "6010831493": {
     "id": 6010831493,
-    "name": "𝘼𝙯𝙯𝙎𝙩𝙚𝙘𝙪𝙪'𝐍𝐮𝐥𝐥𝐒𝐞𝐱 4 0 4",
-    "exp": 50,
-    "level": 1,
+    "name": "𝑨𝒛𝒛𝑺𝒕𝒆𝒄𝒖𝒖 𝑶𝒇𝒇𝒊𝒄𝒊𝒂𝒍",
+    "exp": 234,
+    "level": 3,
     "limit": 20,
-    "uang": 1000,
-    "rank": "Newbine",
+    "uang": 1200,
+    "rank": "Bronze",
     "isBanned": false,
     "isPremium": false
   },
@@ -238,7 +304,7 @@
   "8256619463": {
     "id": 8256619463,
     "name": "alek",
-    "exp": 66,
+    "exp": 85,
     "level": 2,
     "limit": 20,
     "uang": 1100,
@@ -249,26 +315,34 @@
   "8415044649": {
     "id": 8415044649,
     "name": "⏤͟͟͞͞𝐕𝐑𝐊𝐙 || 𝐅 𝙞 𝙓 ғʟᴀᴅᴏ15",
-    "exp": 327,
-    "level": 7,
+    "exp": 246,
+    "level": 8,
     "limit": 15,
-    "uang": 1600,
+    "uang": 1700,
     "rank": "Silver",
     "isBanned": false,
     "isPremium": false,
-    "username": "bewandeck00"
+    "username": "bewandeck00",
+    "khodam": {
+      "name": "Si Keripik Pedas",
+      "power": 38
+    }
   },
   "7639535513": {
     "id": 7639535513,
-    "name": "⏤ࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣧࣧࣧࣧࣧࣧࣧࣧࣧࣧࣧࣧࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨࣨ͟͟͞͞𝐑𝐲",
-    "exp": 346,
-    "level": 17,
-    "limit": 16,
-    "uang": 2600,
+    "name": "¤๋ࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣧࣧࣧࣧࣧࣧࣧࣧࣧࣧࣧ͜͡𝐑𝐲⸙ꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋꠋ",
+    "exp": 291,
+    "level": 18,
+    "limit": 11,
+    "uang": 2700,
     "rank": "Gold",
     "isBanned": false,
     "isPremium": false,
-    "username": "ryzzxiterzz"
+    "username": "ryzzxiterzz",
+    "khodam": {
+      "name": "Genderuwo Seniman",
+      "power": 55
+    }
   },
   "8503297143": {
     "id": 8503297143,
@@ -306,7 +380,7 @@
   "8079893039": {
     "id": 8079893039,
     "name": "DITZ STORE",
-    "exp": 275,
+    "exp": 368,
     "level": 4,
     "limit": 20,
     "uang": 1300,
@@ -339,7 +413,7 @@
   "8484702676": {
     "id": 8484702676,
     "name": "Behhh",
-    "exp": 186,
+    "exp": 191,
     "level": 4,
     "limit": 20,
     "uang": 1300,
@@ -416,11 +490,11 @@
   "6357337997": {
     "id": 6357337997,
     "name": "NINOXITER STORE",
-    "exp": 176,
+    "exp": 183,
     "level": 1,
     "limit": 20,
     "uang": 1000,
-    "rank": "Newbine",
+    "rank": "Newbie",
     "isBanned": false,
     "isPremium": false
   },
@@ -444,7 +518,11 @@
     "uang": 1000,
     "rank": "Newbine",
     "isBanned": false,
-    "isPremium": false
+    "isPremium": false,
+    "khodam": {
+      "name": "Nyi blorong",
+      "power": 98
+    }
   },
   "5541846303": {
     "id": 5541846303,
@@ -493,8 +571,8 @@
   },
   "5556553456": {
     "id": 5556553456,
-    "name": "⌥𝗥𝟴 || 𝐒𝐀𝐍𝐙𝐙🜲⸙",
-    "exp": 41,
+    "name": "𝐀𝐏𝐗 || 𝑹𝑬𝑳",
+    "exp": 138,
     "level": 21,
     "limit": 14,
     "uang": 3000,
@@ -693,7 +771,7 @@
   "7847933290": {
     "id": 7847933290,
     "name": ".",
-    "exp": 34,
+    "exp": 314,
     "level": 2,
     "limit": 20,
     "uang": 1100,
@@ -862,12 +940,12 @@
   },
   "8364403565": {
     "id": 8364403565,
-    "name": "C.RONALDO",
-    "exp": 167,
+    "name": "QIN SING HUANG",
+    "exp": 204,
     "level": 1,
-    "limit": 18,
+    "limit": 17,
     "uang": 1000,
-    "rank": "Newbine",
+    "rank": "Newbie",
     "isBanned": false,
     "isPremium": false
   },
@@ -896,11 +974,11 @@
   "6479988454": {
     "id": 6479988454,
     "name": "Riski",
-    "exp": 0,
+    "exp": 13,
     "level": 1,
     "limit": 20,
     "uang": 1000,
-    "rank": "Bronze",
+    "rank": "Newbie",
     "isBanned": false,
     "isPremium": false
   },
@@ -918,13 +996,17 @@
   "7686879031": {
     "id": 7686879031,
     "name": "Praja",
-    "exp": 306,
+    "exp": 394,
     "level": 3,
     "limit": 20,
     "uang": 1200,
     "rank": "Bronze",
     "isBanned": false,
-    "isPremium": false
+    "isPremium": false,
+    "khodam": {
+      "name": "Kuntilanak Selfie",
+      "power": 43
+    }
   },
   "6930319123": {
     "id": 6930319123,
@@ -1148,7 +1230,7 @@
   },
   "8526712282": {
     "id": 8526712282,
-    "name": "noktel",
+    "name": "Akunbarukennox",
     "exp": 11,
     "level": 1,
     "limit": 20,
@@ -1226,11 +1308,11 @@
   "8586867693": {
     "id": 8586867693,
     "name": "Xz all pinnzz",
-    "exp": 160,
+    "exp": 171,
     "level": 1,
     "limit": 20,
     "uang": 1000,
-    "rank": "Newbine",
+    "rank": "Newbie",
     "isBanned": false,
     "isPremium": false
   },
@@ -1336,8 +1418,8 @@
   },
   "6993072883": {
     "id": 6993072883,
-    "name": "𝙺𝚎𝚗𝚗𝚘𝚡 𝚇 𝚁𝚘𝚢𝚔𝚎𝚗𝚣𝚣",
-    "exp": 88,
+    "name": "KENNOX",
+    "exp": 186,
     "level": 1,
     "limit": 20,
     "uang": 1000,
@@ -1447,6 +1529,369 @@
   "7999010977": {
     "id": 7999010977,
     "name": "⏤‌‌‌‌Xv7 || DRX°",
+    "exp": 0,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "5253165934": {
+    "id": 5253165934,
+    "name": "⏤͟͟͞͞𝐕𝐑𝐊𝐙 || 𝐀𝐑𝐈𝐅𝐎𝐅𝐅𝐈𝐂𝐈𝐀𝐋 𝐃𝐄𝐕 𝐌𝐎𝐃 𝐂𝐑𝐀𝐒𝐇𝐄𝐑 (𝐑𝐄𝐀𝐋) ✘ 𓋌",
+    "exp": 84,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "7477004753": {
+    "id": 7477004753,
+    "name": "Jonhy",
+    "exp": 13,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "5840511014": {
+    "id": 5840511014,
+    "name": "Luciano",
+    "exp": 11,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8589122513": {
+    "id": 8589122513,
+    "name": "Devil",
+    "exp": 14,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "7634352708": {
+    "id": 7634352708,
+    "name": "Mate",
+    "exp": 14,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "6231179450": {
+    "id": 6231179450,
+    "name": "Freak",
+    "exp": 9,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8553870828": {
+    "id": 8553870828,
+    "name": "Agagva",
+    "exp": 8,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8393073682": {
+    "id": 8393073682,
+    "name": "Hwq",
+    "exp": 13,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8565534899": {
+    "id": 8565534899,
+    "name": "Міша",
+    "exp": 12,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "6748940739": {
+    "id": 6748940739,
+    "name": "Владислав",
+    "exp": 7,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "6572021840": {
+    "id": 6572021840,
+    "name": "joel",
+    "exp": 11,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8465787373": {
+    "id": 8465787373,
+    "name": "Yordin",
+    "exp": 14,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "7431655840": {
+    "id": 7431655840,
+    "name": "Victor",
+    "exp": 12,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "6794578821": {
+    "id": 6794578821,
+    "name": "Ruth",
+    "exp": 5,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "6927427521": {
+    "id": 6927427521,
+    "name": "Andre",
+    "exp": 11,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8052822990": {
+    "id": 8052822990,
+    "name": "din suka kmu",
+    "exp": 6,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "7296661930": {
+    "id": 7296661930,
+    "name": "Ryyona",
+    "exp": 9,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8547369176": {
+    "id": 8547369176,
+    "name": "Fepek1",
+    "exp": 14,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8319947783": {
+    "id": 8319947783,
+    "name": "⏤͟͟͞͞Xv7 || DILZX NOKOS",
+    "exp": 0,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "7751143242": {
+    "id": 7751143242,
+    "name": "レヴァン🇯🇵",
+    "exp": 66,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8428460318": {
+    "id": 8428460318,
+    "name": "𝗩𝗵𝗶𝗻𝘁𝗿𝗲𝗽𝘀𝗭 🪬",
+    "exp": 5,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "7911516465": {
+    "id": 7911516465,
+    "name": "Guillermo",
+    "exp": 12,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "5621775985": {
+    "id": 5621775985,
+    "name": "wasaaa",
+    "exp": 12,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "5919419130": {
+    "id": 5919419130,
+    "name": "51735",
+    "exp": 9,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "7266404067": {
+    "id": 7266404067,
+    "name": "Екатерина",
+    "exp": 8,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "5620231838": {
+    "id": 5620231838,
+    "name": "🤷🤷🤷",
+    "exp": 14,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "5654157185": {
+    "id": 5654157185,
+    "name": "Jordan",
+    "exp": 5,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "7034592723": {
+    "id": 7034592723,
+    "name": "Márcia Brasil",
+    "exp": 14,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "6625907911": {
+    "id": 6625907911,
+    "name": "Luis Angelica",
+    "exp": 6,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "5831337911": {
+    "id": 5831337911,
+    "name": "Yeny",
+    "exp": 7,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8328458340": {
+    "id": 8328458340,
+    "name": "jo",
+    "exp": 14,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8061052307": {
+    "id": 8061052307,
+    "name": "M1KZY10⚡",
+    "exp": 7,
+    "level": 1,
+    "limit": 20,
+    "uang": 1000,
+    "rank": "Newbie",
+    "isBanned": false,
+    "isPremium": false
+  },
+  "8261243984": {
+    "id": 8261243984,
+    "name": "𝙃𝙚𝙡𝙢𝙮𝙎𝙏𝙚𝙣 [ 𝙁𝘼𝙎𝙏 𝙍𝙀𝙎𝙋𝙊𝙉 ] ⛧",
     "exp": 0,
     "level": 1,
     "limit": 20,
